@@ -1,8 +1,10 @@
 from sqlalchemy import create_engine
-from llama_index import GPTSQLStructStoreIndex, SQLDatabase
+from llama_index import GPTSQLStructStoreIndex, SQLDatabase, GPTSimpleVectorIndex
+from llama_index.indices.struct_store import SQLContextContainerBuilder
 
 import logging
 import sys
+import langchain
 
 
 pgconfig = {
@@ -17,13 +19,13 @@ pgconfig = {
 def main():
     logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
     logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+    langchain.verbose = True
 
     database_url = 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
         **pgconfig)
     engine = create_engine(database_url)
 
     sql_database = SQLDatabase(engine, include_tables=["receipt"])
-
     index = GPTSQLStructStoreIndex(
         [],
         sql_database=sql_database,
@@ -31,10 +33,9 @@ def main():
     )
 
     response = index.query(
-        "レシート明細データ（receipt）から全項目の先頭10件を表示し、どのようなデータを保有しているか目視で確認せよ。")
-    print(response)
-
+        'レシート明細データ（receipt）と店舗データ（store）を内部結合し、レシート明細データの全項目と店舗データの店舗名（store_name）を10件表示せよ。')
     print(response.extra_info['sql_query'])
+    print(response)
 
 
 if __name__ == "__main__":
