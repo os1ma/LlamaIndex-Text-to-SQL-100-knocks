@@ -1,0 +1,3 @@
+[submodule "100knocks-preprocess"]
+	path = 100knocks-preprocess
+	url = git@github.com:The-Japan-DataScientist-Society/100knocks-preprocess.git
