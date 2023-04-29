@@ -5,6 +5,9 @@ import logging
 import sys
 import langchain
 
+from extract_100knocks_qa import extract_questions
+
+verbose = False
 
 pgconfig = {
     'host': 'localhost',
@@ -16,9 +19,10 @@ pgconfig = {
 
 
 def main():
-    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-    logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
-    langchain.verbose = True
+    if verbose:
+        logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+        logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
+        langchain.verbose = True
 
     database_url = 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
         **pgconfig)
@@ -30,11 +34,15 @@ def main():
         sql_database=sql_database,
     )
 
-    query_str = 'レシート明細データ（receipt）と店舗データ（store）を内部結合し、レシート明細データの全項目と店舗データの店舗名（store_name）を10件表示せよ。'
+    questions = extract_questions()[:3]
 
-    response = index.query(query_str)
-    print(response.extra_info['sql_query'])
-    print(response)
+    for question in questions:
+        print('=== question ===')
+        print(question)
+
+        response = index.query(question)
+        print('=== answer ===')
+        print(response.extra_info['sql_query'])
 
 
 if __name__ == "__main__":
