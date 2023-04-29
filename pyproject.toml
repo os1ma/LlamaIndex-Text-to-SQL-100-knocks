@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "llamaindex-text-to-sql-100-knocks"
+version = "0.1.0"
+description = ""
+authors = ["Yuki Oshima <39944763+os1ma@users.noreply.github.com>"]
+readme = "README.md"
+packages = [{include = "llamaindex_text_to_sql_100_knocks"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
