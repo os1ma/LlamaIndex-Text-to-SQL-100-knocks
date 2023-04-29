@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
-from llama_index import GPTSQLStructStoreIndex, SQLDatabase
+from llama_index import GPTSQLStructStoreIndex, SQLDatabase, ServiceContext, LLMPredictor
+from langchain.chat_models import ChatOpenAI
 
 import logging
 import sys
@@ -29,10 +30,16 @@ def main():
         **pgconfig)
     engine = create_engine(database_url)
 
+    # LlamaIndexはデフォルトでtext-davinci-003を使うので、gpt-3.5-turboを使うよう設定
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo', temperature=0)
+    service_context = ServiceContext.from_defaults(
+        llm_predictor=LLMPredictor(llm=llm))
+
     # LlamaIndexのtext-to-SQLの準備
     sql_database = SQLDatabase(engine)
     index = GPTSQLStructStoreIndex(
         [],
+        service_context=service_context,
         sql_database=sql_database,
     )
 
