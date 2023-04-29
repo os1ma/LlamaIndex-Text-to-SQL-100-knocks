@@ -1,4 +1,9 @@
-from sqlalchemy import create_engine, MetaData, Table, Column, String, Integer, select, column
+from sqlalchemy import create_engine
+from llama_index import GPTSQLStructStoreIndex, SQLDatabase
+
+import logging
+import sys
+
 
 pgconfig = {
     'host': 'localhost',
@@ -10,14 +15,26 @@ pgconfig = {
 
 
 def main():
-    dsl = 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
-        **pgconfig)
-    engine = create_engine(dsl)
-    # metadata_obj = MetaData(bind=engine)
+    logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+    logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
 
-    rs = engine.execute("SELECT 'このように実行できます' AS sample")
-    for row in rs:
-        print((row['sample']))
+    database_url = 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
+        **pgconfig)
+    engine = create_engine(database_url)
+
+    sql_database = SQLDatabase(engine, include_tables=["receipt"])
+
+    index = GPTSQLStructStoreIndex(
+        [],
+        sql_database=sql_database,
+        table_name="receipt",
+    )
+
+    response = index.query(
+        "レシート明細データ（receipt）から全項目の先頭10件を表示し、どのようなデータを保有しているか目視で確認せよ。")
+    print(response)
+
+    print(response.extra_info['sql_query'])
 
 
 if __name__ == "__main__":
