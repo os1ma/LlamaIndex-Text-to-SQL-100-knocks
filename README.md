@@ -10,5 +10,5 @@ poetry install
 ## 実行
 
 ```console
-poetry run python llamaindex_text_to_sql_100_knocks/main.py > tmp/$(date '+%Y%m%d%H%M%S').txt 2>&1
+poetry run python llamaindex_text_to_sql_100_knocks/main.py > tmp/$(date '+%Y%m%d%H%M%S').txt
 ```

@@ -44,7 +44,7 @@ def main():
     )
 
     # 問題の一覧を抽出
-    questions = extract_questions()[:3]
+    questions = extract_questions()[:100]
 
     # text-to-SQLを実行
     for question in questions:
