@@ -24,18 +24,22 @@ def main():
         logging.getLogger().addHandler(logging.StreamHandler(stream=sys.stdout))
         langchain.verbose = True
 
+    # データベースに接続
     database_url = 'postgresql://{user}:{password}@{host}:{port}/{database}'.format(
         **pgconfig)
     engine = create_engine(database_url)
 
+    # LlamaIndexのtext-to-SQLの準備
     sql_database = SQLDatabase(engine)
     index = GPTSQLStructStoreIndex(
         [],
         sql_database=sql_database,
     )
 
+    # 問題の一覧を抽出
     questions = extract_questions()[:3]
 
+    # text-to-SQLを実行
     for question in questions:
         print('=== question ===')
         print(question)
