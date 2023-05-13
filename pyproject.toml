@@ -10,6 +10,7 @@ packages = [{include = "llamaindex_text_to_sql_100_knocks"}]
 python = "^3.11"
 llama-index = "^0.5.27"
 psycopg2 = "^2.9.6"
+ruamel-yaml = "^0.17.26"
 
 
 [tool.poetry.group.dev.dependencies]

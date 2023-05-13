@@ -1,12 +1,13 @@
-from sqlalchemy import create_engine
-from llama_index import GPTSQLStructStoreIndex, SQLDatabase, ServiceContext, LLMPredictor
-from langchain.chat_models import ChatOpenAI
-
 import logging
 import sys
-import langchain
 
+import langchain
 from extract_100knocks_qa import extract_questions
+from langchain.chat_models import ChatOpenAI
+from llama_index import (GPTSQLStructStoreIndex, LLMPredictor, ServiceContext,
+                         SQLDatabase)
+from ruamel.yaml import YAML
+from sqlalchemy import create_engine
 
 verbose = False
 
@@ -44,16 +45,25 @@ def main():
     )
 
     # 問題の一覧を抽出
-    questions = extract_questions()[:100]
+    questions = extract_questions()[:50]
 
     # text-to-SQLを実行
+    qa_list = []
     for question in questions:
-        print('=== question ===')
-        print(question)
-
         response = index.query(question)
-        print('=== answer ===')
-        print(response.extra_info['sql_query'])
+        answer = response.extra_info['sql_query']
+
+        qa = {
+            'question': question,
+            'answer': answer,
+        }
+        qa_list.append(qa)
+
+    # 実行結果を保存
+    yaml = YAML()
+    yaml.default_style = '|'
+    with open('tmp/result.yaml', 'w', encoding='utf-8') as f:
+        yaml.dump(qa_list, f)
 
 
 if __name__ == "__main__":

@@ -1,0 +1,453 @@
+- "question": |-
+    ---
+    > S-001: レシート明細データ（receipt）から全項目の先頭10件を表示し、どのようなデータを保有しているか目視で確認せよ。
+  "answer": |-
+    SELECT * FROM receipt LIMIT 10;
+- "question": |-
+    ---
+    > S-002: レシート明細データ（receipt）から売上年月日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、10件表示せよ。
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-003: レシート明細データ（receipt）から売上年月日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、10件表示せよ。ただし、sales_ymdsales_dateに項目名を変更しながら抽出すること。
+  "answer": |-
+    SELECT sales_ymd AS sales_date, customer_id, product_cd, amount
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-004: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001'
+- "question": |-
+    ---
+    > S-005: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の全ての条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+    > - 売上金額（amount）が1,000以上
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001' AND amount >= 1000
+    ORDER BY amount DESC
+- "question": |-
+    ---
+    > S-006: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上数量（quantity）、売上金額（amount）の順に列を指定し、以下の全ての条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+    > - 売上金額（amount）が1,000以上または売上数量（quantity）が5以上
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, quantity, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001' AND (amount >= 1000 OR quantity >= 5)
+    ORDER BY sales_ymd
+- "question": |-
+    ---
+    > S-007: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の全ての条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+    > - 売上金額（amount）が1,000以上2,000以下
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001' AND amount BETWEEN 1000 AND 2000
+    ORDER BY amount DESC;
+- "question": |-
+    ---
+    > S-008: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の全ての条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+    > - 商品コード（product_cd）が"P071401019"以外
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001' AND product_cd != 'P071401019'
+    ORDER BY amount DESC
+- "question": |-
+    ---
+    > S-009: 以下の処理において、出力結果を変えずにORをANDに書き換えよ。
+    >
+    > `SELECT * FROM store WHERE NOT (prefecture_cd = '13' OR floor_area > 900)`
+  "answer": |-
+    SELECT * FROM store WHERE NOT (prefecture_cd = '13' AND floor_area > 900)
+- "question": |-
+    ---
+    > S-010: 店舗データ（store）から、店舗コード（store_cd）が"S14"で始まるものだけ全項目抽出し、10件表示せよ。
+  "answer": |-
+    SELECT * FROM store WHERE store_cd LIKE 'S14%' LIMIT 10;
+- "question": |-
+    ---
+    > S-011: 顧客データ（customer）から顧客ID（customer_id）の末尾が1のものだけ全項目抽出し、10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer WHERE customer_id LIKE '%1' LIMIT 10;
+- "question": |-
+    ---
+    > S-012: 店舗データ（store）から、住所 (address) に"横浜市"が含まれるものだけ全項目表示せよ。
+  "answer": |-
+    SELECT * FROM store WHERE address LIKE '%横浜市%'
+- "question": |-
+    ---
+    > S-013: 顧客データ（customer）から、ステータスコード（status_cd）の先頭がアルファベットのA〜Fで始まるデータを全項目抽出し、10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer WHERE status_cd LIKE 'A%' OR status_cd LIKE 'B%' OR status_cd LIKE 'C%' OR status_cd LIKE 'D%' OR status_cd LIKE 'E%' OR status_cd LIKE 'F%' LIMIT 10;
+- "question": |-
+    ---
+    > S-014: 顧客データ（customer）から、ステータスコード（status_cd）の末尾が数字の1〜9で終わるデータを全項目抽出し、10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer WHERE status_cd LIKE '%[1-9]' LIMIT 10;
+- "question": |-
+    ---
+    > S-015: 顧客データ（customer）から、ステータスコード（status_cd）の先頭がアルファベットのA〜Fで始まり、末尾が数字の1〜9で終わるデータを全項目抽出し、10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer WHERE status_cd LIKE '[A-F]%[1-9]' LIMIT 10;
+- "question": |-
+    ---
+    > S-016: 店舗データ（store）から、電話番号（tel_no）が3桁-3桁-4桁のデータを全項目表示せよ。
+  "answer": |-
+    SELECT * FROM store WHERE tel_no LIKE '___-___-____'
+- "question": |-
+    ---
+    > S-017: 顧客データ（customer）を生年月日（birth_day）で高齢順にソートし、先頭から全項目を10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer ORDER BY birth_day ASC LIMIT 10;
+- "question": |-
+    ---
+    > S-018: 顧客データ（customer）を生年月日（birth_day）で若い順にソートし、先頭から全項目を10件表示せよ。
+  "answer": |-
+    SELECT * FROM customer ORDER BY birth_day ASC LIMIT 10;
+- "question": |-
+    ---
+    > S-019: レシート明細データ（receipt）に対し、1件あたりの売上金額（amount）が高い順にランクを付与し、先頭から10件表示せよ。項目は顧客ID（customer_id）、売上金額（amount）、付与したランクを表示させること。なお、売上金額（amount）が等しい場合は同一順位を付与するものとする。
+  "answer": |-
+    SELECT customer_id, amount, DENSE_RANK() OVER (ORDER BY amount DESC) as rank
+    FROM receipt
+    ORDER BY rank
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-020: レシート明細データ（receipt）に対し、1件あたりの売上金額（amount）が高い順にランクを付与し、先頭から10件表示せよ。項目は顧客ID（customer_id）、売上金額（amount）、付与したランクを表示させること。なお、売上金額（amount）が等しい場合でも別順位を付与すること。
+  "answer": |-
+    SELECT customer_id, amount, DENSE_RANK() OVER (ORDER BY amount DESC) as rank
+    FROM receipt
+    ORDER BY amount DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-021: レシート明細データ（receipt）に対し、件数をカウントせよ。
+  "answer": |-
+    SELECT COUNT(*) FROM receipt;
+- "question": |-
+    ---
+    > S-022: レシート明細データ（receipt）の顧客ID（customer_id）に対し、ユニーク件数をカウントせよ。
+  "answer": |-
+    SELECT COUNT(DISTINCT customer_id) FROM receipt;
+- "question": |-
+    ---
+    > S-023: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）と売上数量（quantity）を合計せよ。
+  "answer": |-
+    SELECT store_cd, SUM(amount) AS total_sales, SUM(quantity) AS total_quantity FROM receipt GROUP BY store_cd
+- "question": |-
+    ---
+    > S-024: レシート明細データ（receipt）に対し、顧客ID（customer_id）ごとに最も新しい売上年月日（sales_ymd）を求め、10件表示せよ。
+  "answer": |-
+    SELECT customer_id, MAX(sales_ymd) AS latest_sales_ymd
+    FROM receipt
+    GROUP BY customer_id
+    ORDER BY latest_sales_ymd DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-025: レシート明細データ（receipt）に対し、顧客ID（customer_id）ごとに最も古い売上年月日（sales_ymd）を求め、10件表示せよ。
+  "answer": |-
+    SELECT customer_id, MIN(sales_ymd) AS oldest_sales_ymd
+    FROM receipt
+    GROUP BY customer_id
+    ORDER BY oldest_sales_ymd
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-026: レシート明細データ（receipt）に対し、顧客ID（customer_id）ごとに最も新しい売上年月日（sales_ymd）と古い売上年月日を求め、両者が異なるデータを10件表示せよ。
+  "answer": |-
+    SELECT customer_id, MAX(sales_ymd) AS newest_sales, MIN(sales_ymd) AS oldest_sales
+    FROM receipt
+    GROUP BY customer_id
+    HAVING MAX(sales_ymd) != MIN(sales_ymd)
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-027: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）の平均を計算し、降順でTOP5を表示せよ。
+  "answer": |-
+    SELECT store_cd, AVG(amount) AS avg_amount
+    FROM receipt
+    GROUP BY store_cd
+    ORDER BY avg_amount DESC
+    LIMIT 5;
+- "question": |-
+    ---
+    > S-028: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）の中央値を計算し、降順でTOP5を表示せよ。
+  "answer": |-
+    SELECT store_cd, percentile_cont(0.5) WITHIN GROUP (ORDER BY amount) AS median_amount
+    FROM receipt
+    GROUP BY store_cd
+    ORDER BY median_amount DESC
+    LIMIT 5;
+- "question": |-
+    ---
+    > S-029: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに商品コード（product_cd）の最頻値を求め、10件表示させよ。
+  "answer": |-
+    SELECT store_cd, product_cd, COUNT(*) AS frequency
+    FROM receipt
+    GROUP BY store_cd, product_cd
+    ORDER BY store_cd, frequency DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-030: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）の分散を計算し、降順で5件表示せよ。
+  "answer": |-
+    SELECT store_cd, VARIANCE(amount) AS variance_amount
+    FROM receipt
+    GROUP BY store_cd
+    ORDER BY variance_amount DESC
+    LIMIT 5;
+- "question": |-
+    ---
+    > S-031: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）の標準偏差を計算し、降順で5件表示せよ。
+  "answer": |-
+    SELECT store_cd, stddev(amount) AS std_amount
+    FROM receipt
+    GROUP BY store_cd
+    ORDER BY std_amount DESC
+    LIMIT 5;
+- "question": |-
+    ---
+    > S-032: レシート明細データ（receipt）の売上金額（amount）について、25％刻みでパーセンタイル値を求めよ。
+  "answer": |-
+    SELECT percentile_disc(0.25) WITHIN GROUP (ORDER BY amount) AS "25th Percentile",
+           percentile_disc(0.50) WITHIN GROUP (ORDER BY amount) AS "50th Percentile",
+           percentile_disc(0.75) WITHIN GROUP (ORDER BY amount) AS "75th Percentile",
+           percentile_disc(1.00) WITHIN GROUP (ORDER BY amount) AS "100th Percentile"
+    FROM receipt;
+- "question": |-
+    ---
+    > S-033: レシート明細データ（receipt）に対し、店舗コード（store_cd）ごとに売上金額（amount）の平均を計算し、330以上のものを抽出せよ。
+  "answer": |-
+    SELECT store_cd, AVG(amount) AS avg_amount
+    FROM receipt
+    GROUP BY store_cd
+    HAVING AVG(amount) >= 330
+    ORDER BY avg_amount DESC
+- "question": |-
+    ---
+    > S-034: レシート明細データ（receipt）に対し、顧客ID（customer_id）ごとに売上金額（amount）を合計して全顧客の平均を求めよ。ただし、顧客IDが"Z"から始まるものは非会員を表すため、除外して計算すること。
+  "answer": |-
+    SELECT AVG(total_amount) 
+    FROM (
+      SELECT customer_id, SUM(amount) AS total_amount 
+      FROM receipt 
+      WHERE customer_id NOT LIKE 'Z%' 
+      GROUP BY customer_id
+    ) AS customer_total_amount
+- "question": |-
+    ---
+    > S-035: レシート明細データ（receipt）に対し、顧客ID（customer_id）ごとに売上金額（amount）を合計して全顧客の平均を求め、平均以上に買い物をしている顧客を抽出し、10件表示せよ。ただし、顧客IDが"Z"から始まるものは非会員を表すため、除外して計算すること。
+  "answer": |-
+    SELECT customer_id, SUM(amount) AS total_amount
+    FROM receipt
+    WHERE customer_id NOT LIKE 'Z%'
+    GROUP BY customer_id
+    HAVING AVG(amount) >= (SELECT AVG(total_amount) FROM (SELECT customer_id, SUM(amount) AS total_amount FROM receipt WHERE customer_id NOT LIKE 'Z%' GROUP BY customer_id) AS subquery)
+    ORDER BY total_amount DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-036: レシート明細データ（receipt）と店舗データ（store）を内部結合し、レシート明細データの全項目と店舗データの店舗名（store_name）を10件表示せよ。
+  "answer": |-
+    SELECT r.*, s.store_name
+    FROM receipt r
+    INNER JOIN store s ON r.store_cd = s.store_cd
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-037: 商品データ（product）とカテゴリデータ（category）を内部結合し、商品データの全項目とカテゴリデータのカテゴリ小区分名（category_small_name）を10件表示せよ。
+  "answer": |-
+    SELECT product.*, category.category_small_name
+    FROM product
+    INNER JOIN category
+    ON product.category_small_cd = category.category_small_cd
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-038: 顧客データ（customer）とレシート明細データ（receipt）から、顧客ごとの売上金額合計を求め、10件表示せよ。ただし、売上実績がない顧客については売上金額を0として表示させること。また、顧客は性別コード（gender_cd）が女性（1）であるものを対象とし、非会員（顧客IDが"Z"から始まるもの）は除外すること。
+  "answer": |-
+    SELECT c.customer_id, COALESCE(SUM(r.amount), 0) AS total_sales
+    FROM customer c
+    LEFT JOIN receipt r ON c.customer_id = r.customer_id
+    WHERE c.gender_cd = '1' AND c.customer_id NOT LIKE 'Z%'
+    GROUP BY c.customer_id
+    ORDER BY total_sales DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-039: レシート明細データ（receipt）から、売上日数の多い顧客の上位20件を抽出したデータと、売上金額合計の多い顧客の上位20件を抽出したデータをそれぞれ作成し、さらにその2つを完全外部結合せよ。ただし、非会員（顧客IDが"Z"から始まるもの）は除外すること。
+  "answer": |-
+    WITH sales_count AS (
+      SELECT customer_id, COUNT(DISTINCT sales_ymd) AS sales_days
+      FROM receipt
+      WHERE customer_id NOT LIKE 'Z%'
+      GROUP BY customer_id
+      ORDER BY sales_days DESC
+      LIMIT 20
+    ), sales_amount AS (
+      SELECT customer_id, SUM(amount) AS total_amount
+      FROM receipt
+      WHERE customer_id NOT LIKE 'Z%'
+      GROUP BY customer_id
+      ORDER BY total_amount DESC
+      LIMIT 20
+    )
+    SELECT *
+    FROM sales_count FULL OUTER JOIN sales_amount
+    ON sales_count.customer_id = sales_amount.customer_id
+- "question": |-
+    ---
+    > S-040: 全ての店舗と全ての商品を組み合わせたデータを作成したい。店舗データ（store）と商品データ（product）を直積し、件数を計算せよ。
+  "answer": |-
+    SELECT COUNT(*) FROM store, product
+- "question": |-
+    ---
+    > S-041: レシート明細データ（receipt）の売上金額（amount）を日付（sales_ymd）ごとに集計し、前回売上があった日からの売上金額増減を計算せよ。そして結果を10件表示せよ。
+  "answer": |-
+    SELECT sales_ymd, SUM(amount) as total_amount, 
+           SUM(amount) - LAG(SUM(amount)) OVER (ORDER BY sales_ymd) as amount_change
+    FROM receipt
+    GROUP BY sales_ymd
+    ORDER BY sales_ymd DESC
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-042: レシート明細データ（receipt）の売上金額（amount）を日付（sales_ymd）ごとに集計し、各日付のデータに対し、前回、前々回、3回前に売上があった日のデータを結合せよ。そして結果を10件表示せよ。
+  "answer": |-
+    SELECT 
+        r1.sales_ymd, 
+        SUM(r1.amount) AS total_amount, 
+        r2.sales_ymd AS prev_sales_ymd, 
+        SUM(r2.amount) AS prev_total_amount, 
+        r3.sales_ymd AS prev_prev_sales_ymd, 
+        SUM(r3.amount) AS prev_prev_total_amount, 
+        r4.sales_ymd AS prev_prev_prev_sales_ymd, 
+        SUM(r4.amount) AS prev_prev_prev_total_amount
+    FROM 
+        receipt r1
+    LEFT JOIN 
+        receipt r2 ON r1.sales_ymd - 1 = r2.sales_ymd AND r1.store_cd = r2.store_cd
+    LEFT JOIN 
+        receipt r3 ON r1.sales_ymd - 2 = r3.sales_ymd AND r1.store_cd = r3.store_cd
+    LEFT JOIN 
+        receipt r4 ON r1.sales_ymd - 3 = r4.sales_ymd AND r1.store_cd = r4.store_cd
+    GROUP BY 
+        r1.sales_ymd, 
+        r2.sales_ymd, 
+        r3.sales_ymd, 
+        r4.sales_ymd
+    ORDER BY 
+        r1.sales_ymd DESC
+    LIMIT 
+        10
+- "question": |-
+    ---
+    > S-043: レシート明細データ（receipt）と顧客データ（customer）を結合し、性別コード（gender_cd）と年代（ageから計算）ごとに売上金額（amount）を合計した売上サマリデータを作成せよ。性別コードは0が男性、1が女性、9が不明を表すものとする。
+    >
+    > ただし、項目構成は年代、女性の売上金額、男性の売上金額、性別不明の売上金額の4項目とすること（縦に年代、横に性別のクロス集計）。また、年代は10歳ごとの階級とすること。
+  "answer": |-
+    SELECT 
+      CASE 
+        WHEN age < 10 THEN '0-9'
+        WHEN age < 20 THEN '10-19'
+        WHEN age < 30 THEN '20-29'
+        WHEN age < 40 THEN '30-39'
+        WHEN age < 50 THEN '40-49'
+        WHEN age < 60 THEN '50-59'
+        WHEN age < 70 THEN '60-69'
+        WHEN age < 80 THEN '70-79'
+        ELSE '80以上'
+      END AS age_range,
+      SUM(CASE WHEN gender_cd = '1' THEN amount ELSE 0 END) AS female_sales,
+      SUM(CASE WHEN gender_cd = '0' THEN amount ELSE 0 END) AS male_sales,
+      SUM(CASE WHEN gender_cd = '9' THEN amount ELSE 0 END) AS unknown_gender_sales
+    FROM 
+      receipt
+      JOIN customer ON receipt.customer_id = customer.customer_id
+    GROUP BY 
+      age_range
+    ORDER BY 
+      age_range
+- "question": |-
+    ---
+    > S-044: 043で作成した売上サマリデータ（sales_summary）は性別の売上を横持ちさせたものであった。このデータから性別を縦持ちさせ、年代、性別コード、売上金額の3項目に変換せよ。ただし、性別コードは男性を"00"、女性を"01"、不明を"99"とする。
+  "answer": |-
+    SELECT
+      CASE
+        WHEN c.gender_cd = '1' THEN '01'
+        WHEN c.gender_cd = '0' THEN '00'
+        ELSE '99'
+      END AS gender_code,
+      CASE
+        WHEN age < 20 THEN '10代以下'
+        WHEN age < 30 THEN '20代'
+        WHEN age < 40 THEN '30代'
+        WHEN age < 50 THEN '40代'
+        WHEN age < 60 THEN '50代'
+        WHEN age < 70 THEN '60代'
+        ELSE '70代以上'
+      END AS age_group,
+      SUM(r.amount) AS total_sales
+    FROM
+      receipt r
+      JOIN customer c ON r.customer_id = c.customer_id
+    GROUP BY
+      gender_code,
+      age_group
+    ORDER BY
+      total_sales DESC;
+- "question": |-
+    ---
+    > S-045: 顧客データ（customer）の生年月日（birth_day）は日付型でデータを保有している。これをYYYYMMDD形式の文字列に変換し、顧客ID（customer_id）とともに10件表示せよ。
+  "answer": |-
+    SELECT customer_id, TO_CHAR(birth_day, 'YYYYMMDD') AS birth_day_string
+    FROM customer
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-046: 顧客データ（customer）の申し込み日（application_date）はYYYYMMDD形式の文字列型でデータを保有している。これを日付型に変換し、顧客ID（customer_id）とともに10件表示せよ。
+  "answer": |-
+    SELECT customer_id, TO_DATE(application_date, 'YYYYMMDD') AS application_date FROM customer LIMIT 10;
+- "question": |-
+    ---
+    > S-047: レシート明細データ（receipt）の売上日（sales_ymd）はYYYYMMDD形式の数値型でデータを保有している。これを日付型に変換し、レシート番号(receipt_no)、レシートサブ番号（receipt_sub_no）とともに10件表示せよ。
+  "answer": |-
+    SELECT TO_DATE(sales_ymd::text, 'YYYYMMDD') AS sales_date, receipt_no, receipt_sub_no
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-048: レシート明細データ（receipt）の売上エポック秒（sales_epoch）は数値型のUNIX秒でデータを保有している。これを日付型に変換し、レシート番号(receipt_no)、レシートサブ番号（receipt_sub_no）とともに10件表示せよ。
+  "answer": |-
+    SELECT to_timestamp(sales_epoch), receipt_no, receipt_sub_no
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-049: レシート明細データ（receipt）の売上エポック秒（sales_epoch）を日付型に変換し、「年」だけ取り出してレシート番号(receipt_no)、レシートサブ番号（receipt_sub_no）とともに10件表示せよ。
+  "answer": |-
+    SELECT receipt_no, receipt_sub_no, DATE_TRUNC('year', TO_TIMESTAMP(sales_epoch)) AS year
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-050: レシート明細データ（receipt）の売上エポック秒（sales_epoch）を日付型に変換し、「月」だけ取り出してレシート番号(receipt_no)、レシートサブ番号（receipt_sub_no）とともに10件表示せよ。なお、「月」は0埋め2桁で取り出すこと。
+  "answer": |-
+    SELECT TO_CHAR(TO_TIMESTAMP(sales_epoch), 'MM') AS month, receipt_no, receipt_sub_no
+    FROM receipt
+    LIMIT 10;
