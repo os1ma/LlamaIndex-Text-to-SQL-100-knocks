@@ -63,7 +63,7 @@ def main():
     if verbose:
         langchain.verbose = True
 
-    questions = extract_questions()[:50]
+    questions = extract_questions()
 
     yaml = YAML()
     yaml.default_style = '|'
