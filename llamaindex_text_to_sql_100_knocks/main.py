@@ -62,7 +62,7 @@ def main():
     # 実行結果を保存
     yaml = YAML()
     yaml.default_style = '|'
-    with open('tmp/result.yaml', 'w', encoding='utf-8') as f:
+    with open('out/result.yaml', 'w', encoding='utf-8') as f:
         yaml.dump(qa_list, f)
 
 
