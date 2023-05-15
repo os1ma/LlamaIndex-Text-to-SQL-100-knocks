@@ -47,23 +47,20 @@ def main():
     # 問題の一覧を抽出
     questions = extract_questions()[:50]
 
-    # text-to-SQLを実行
-    qa_list = []
-    for question in questions:
-        response = index.query(question)
-        answer = response.extra_info['sql_query']
-
-        qa = {
-            'question': question,
-            'answer': answer,
-        }
-        qa_list.append(qa)
-
-    # 実行結果を保存
     yaml = YAML()
     yaml.default_style = '|'
     with open('out/result.yaml', 'w', encoding='utf-8') as f:
-        yaml.dump(qa_list, f)
+
+        # text-to-SQLを実行
+        for question in questions:
+            response = index.query(question)
+            answer = response.extra_info['sql_query']
+
+            qa = {
+                'question': question,
+                'answer': answer,
+            }
+            yaml.dump([qa], f)
 
 
 if __name__ == "__main__":

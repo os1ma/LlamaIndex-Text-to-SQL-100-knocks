@@ -6,7 +6,7 @@ from langchain.chat_models import ChatOpenAI
 from llama_index import LLMPredictor, Prompt
 from ruamel.yaml import YAML
 
-verbose = False
+verbose = True
 
 # LlamaIndexが内部で使用しているプロンプトから、以下の2行を削除したプロンプト
 #
@@ -44,36 +44,32 @@ def main():
     # 問題の一覧を抽出
     questions = extract_questions()[:50]
 
-    # text-to-SQLを実行
-    qa_list = []
-    for question in questions:
-        response_str, _ = predictor.predict(
-            prompt, dialect="postgresql", query_str=question)
-
-        stop_token = "\nSQLResult:"
-        stop_token_index = response_str.find(stop_token)
-
-        if stop_token_index == -1:
-            error = "stop_token not found"
-            qa = {
-                'question': question,
-                'error': error,
-            }
-        else:
-            answer = response_str[:stop_token_index]
-            qa = {
-                'question': question,
-                'answer': answer,
-            }
-
-        qa_list.append(qa)
-        print(qa)
-
-    # 実行結果を保存
     yaml = YAML()
     yaml.default_style = '|'
     with open('out/result_without_schema.yaml', 'w', encoding='utf-8') as f:
-        yaml.dump(qa_list, f)
+
+        # text-to-SQLを実行
+        for question in questions:
+            response_str, _ = predictor.predict(
+                prompt, dialect="postgresql", query_str=question)
+
+            stop_token = "\nSQLResult:"
+            stop_token_index = response_str.find(stop_token)
+
+            if stop_token_index == -1:
+                error = "stop_token not found"
+                qa = {
+                    'question': question,
+                    'error': error,
+                }
+            else:
+                answer = response_str[:stop_token_index]
+                qa = {
+                    'question': question,
+                    'answer': answer,
+                }
+
+            yaml.dump([qa], f)
 
 
 if __name__ == "__main__":
