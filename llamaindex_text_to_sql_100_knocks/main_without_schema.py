@@ -35,7 +35,9 @@ def main():
     if verbose:
         langchain.verbose = True
 
-    llm = ChatOpenAI(model_name='gpt-3.5-turbo', temperature=0)
+    # max_tokensを指定しないと、非常に長い時間がかかるため、max_tokensを指定
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo',
+                     temperature=0, max_tokens=200)
     predictor = LLMPredictor(llm=llm)
     prompt = CustomPrompt(template)
 

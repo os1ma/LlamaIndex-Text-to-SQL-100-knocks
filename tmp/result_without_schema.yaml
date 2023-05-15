@@ -3,3 +3,36 @@
     > S-001: レシート明細データ（receipt）から全項目の先頭10件を表示し、どのようなデータを保有しているか目視で確認せよ。
   "answer": |-
     SELECT * FROM receipt LIMIT 10;
+- "question": |-
+    ---
+    > S-002: レシート明細データ（receipt）から売上年月日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、10件表示せよ。
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-003: レシート明細データ（receipt）から売上年月日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、10件表示せよ。ただし、sales_ymdsales_dateに項目名を変更しながら抽出すること。
+  "answer": |-
+    SELECT sales_ymd AS sales_date, customer_id, product_cd, amount
+    FROM receipt
+    LIMIT 10;
+- "question": |-
+    ---
+    > S-004: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001'
+    ORDER BY sales_ymd;
+- "question": |-
+    ---
+    > S-005: レシート明細データ（receipt）から売上日（sales_ymd）、顧客ID（customer_id）、商品コード（product_cd）、売上金額（amount）の順に列を指定し、以下の全ての条件を満たすデータを抽出せよ。
+    > - 顧客ID（customer_id）が"CS018205000001"
+    > - 売上金額（amount）が1,000以上
+  "answer": |-
+    SELECT sales_ymd, customer_id, product_cd, amount
+    FROM receipt
+    WHERE customer_id = 'CS018205000001' AND amount >= 1000
+    ORDER BY sales_ymd;
