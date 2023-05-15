@@ -31,17 +31,38 @@ class CustomPrompt(Prompt):
     input_variables: List[str] = ["query_str", "dialect"]
 
 
+def predict(question: str, max_tokens: int):
+    # max_tokensを指定しないと、非常に長い時間がかかるため、max_tokensを指定
+    llm = ChatOpenAI(model_name='gpt-3.5-turbo',
+                     temperature=0, max_tokens=max_tokens)
+    predictor = LLMPredictor(llm=llm)
+    prompt = CustomPrompt(template)
+
+    response_str, _ = predictor.predict(
+        prompt, dialect="postgresql", query_str=question)
+
+    stop_token = "\nSQLResult:"
+    stop_token_index = response_str.find(stop_token)
+
+    if stop_token_index == -1:
+        error = "stop_token not found"
+        qa = {
+            'question': question,
+            'error': error,
+        }
+    else:
+        answer = response_str[:stop_token_index]
+        qa = {
+            'question': question,
+            'answer': answer,
+        }
+    return qa
+
+
 def main():
     if verbose:
         langchain.verbose = True
 
-    # max_tokensを指定しないと、非常に長い時間がかかるため、max_tokensを指定
-    llm = ChatOpenAI(model_name='gpt-3.5-turbo',
-                     temperature=0, max_tokens=200)
-    predictor = LLMPredictor(llm=llm)
-    prompt = CustomPrompt(template)
-
-    # 問題の一覧を抽出
     questions = extract_questions()[:50]
 
     yaml = YAML()
@@ -50,24 +71,11 @@ def main():
 
         # text-to-SQLを実行
         for question in questions:
-            response_str, _ = predictor.predict(
-                prompt, dialect="postgresql", query_str=question)
+            qa = predict(question, max_tokens=200)
 
-            stop_token = "\nSQLResult:"
-            stop_token_index = response_str.find(stop_token)
-
-            if stop_token_index == -1:
-                error = "stop_token not found"
-                qa = {
-                    'question': question,
-                    'error': error,
-                }
-            else:
-                answer = response_str[:stop_token_index]
-                qa = {
-                    'question': question,
-                    'answer': answer,
-                }
+            # エラーになった場合にmax_tokensを追加してリトライ
+            if 'error' in qa:
+                qa = predict(question, max_tokens=500)
 
             yaml.dump([qa], f)
 
