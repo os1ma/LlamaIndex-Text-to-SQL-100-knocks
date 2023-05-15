@@ -1,10 +1,9 @@
+from typing import List
+
 import langchain
 from extract_100knocks_qa import extract_questions
-from langchain import PromptTemplate
-from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from langchain.prompts.chat import (ChatPromptTemplate,
-                                    HumanMessagePromptTemplate)
+from llama_index import LLMPredictor, Prompt
 from ruamel.yaml import YAML
 
 verbose = True
@@ -28,44 +27,31 @@ Question: {query_str}
 SQLQuery: """
 
 
+class CustomPrompt(Prompt):
+    input_variables: List[str] = ["query_str", "dialect"]
+
+
 def main():
     if verbose:
         langchain.verbose = True
 
-    # LlamaIndexはデフォルトでtext-davinci-003を使うので、gpt-3.5-turboを使うよう設定
     llm = ChatOpenAI(model_name='gpt-3.5-turbo', temperature=0)
-
-    # https://github.com/jerryjliu/llama_index/blob/c60b9420b67cff3b07d483dda96544992d298c6f/gpt_index/prompts/default_prompts.py#L173
-    prompt = PromptTemplate(
-        template=template,
-        input_variables=['dialect', 'query_str'],
-    )
-    chat_prompt_template = ChatPromptTemplate.from_messages(
-        [HumanMessagePromptTemplate(prompt=prompt)])
-
-    chain = LLMChain(llm=llm, prompt=chat_prompt_template)
-
-    chain(inputs={
-        "dialect": "postgresql",
-        "query_str": ""
-    })
+    predictor = LLMPredictor(llm=llm)
+    prompt = CustomPrompt(template)
 
     # 問題の一覧を抽出
-    questions = extract_questions()[:1]
+    questions = extract_questions()[:5]
 
     # text-to-SQLを実行
     qa_list = []
     for question in questions:
-        chain_result = chain(inputs={
-            "dialect": "postgresql",
-            "query_str": question
-        })
-        text = chain_result['text']
+        response_str, _ = predictor.predict(
+            prompt, dialect="postgresql", query_str=question)
 
         stop_token = "\nSQLResult:"
-        stop_token_index = text.find(stop_token)
+        stop_token_index = response_str.find(stop_token)
 
-        answer = text[:stop_token_index]
+        answer = response_str[:stop_token_index]
 
         qa = {
             'question': question,

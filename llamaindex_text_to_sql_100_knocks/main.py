@@ -9,7 +9,7 @@ from llama_index import (GPTSQLStructStoreIndex, LLMPredictor, ServiceContext,
 from ruamel.yaml import YAML
 from sqlalchemy import create_engine
 
-verbose = False
+verbose = True
 
 pgconfig = {
     'host': 'localhost',
@@ -33,8 +33,8 @@ def main():
 
     # LlamaIndexはデフォルトでtext-davinci-003を使うので、gpt-3.5-turboを使うよう設定
     llm = ChatOpenAI(model_name='gpt-3.5-turbo', temperature=0)
-    service_context = ServiceContext.from_defaults(
-        llm_predictor=LLMPredictor(llm=llm))
+    predictor = LLMPredictor(llm)
+    service_context = ServiceContext.from_defaults(llm_predictor=predictor)
 
     # LlamaIndexのtext-to-SQLの準備
     sql_database = SQLDatabase(engine)
