@@ -45,7 +45,7 @@ def main():
     )
 
     # 問題の一覧を抽出
-    questions = extract_questions()[:50]
+    questions = extract_questions()
 
     yaml = YAML()
     yaml.default_style = '|'
@@ -53,13 +53,19 @@ def main():
 
         # text-to-SQLを実行
         for question in questions:
-            response = index.query(question)
-            answer = response.extra_info['sql_query']
+            try:
+                response = index.query(question)
+                answer = response.extra_info['sql_query']
 
-            qa = {
-                'question': question,
-                'answer': answer,
-            }
+                qa = {
+                    'question': question,
+                    'answer': answer,
+                }
+            except Exception as e:
+                qa = {
+                    'question': question,
+                    'error': str(e),
+                }
             yaml.dump([qa], f)
 
 
