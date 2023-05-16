@@ -1,6 +1,6 @@
-# LlamaIndex で text-to-SQL 100 本ノック！
+# LlamaIndex で Text-to-SQL 100 本ノック！
 
-LlamaIndex の text-to-SQL 機能のサンプルコードです。
+LlamaIndex の Text-to-SQL 機能のサンプルコードです。
 
 「データサイエンティスト協会スキル定義委員」の「[データサイエンス 100 本ノック（構造化データ加工編）](https://github.com/The-Japan-DataScientist-Society/100knocks-preprocess)」を使用しています。
 
