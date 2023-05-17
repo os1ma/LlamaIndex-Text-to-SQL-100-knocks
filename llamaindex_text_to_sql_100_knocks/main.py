@@ -49,7 +49,7 @@ def main():
 
     yaml = YAML()
     yaml.default_style = '|'
-    with open('out/result.yaml', 'w', encoding='utf-8') as f:
+    with open('results/result.yaml', 'w', encoding='utf-8') as f:
 
         # text-to-SQLを実行
         for question in questions:
